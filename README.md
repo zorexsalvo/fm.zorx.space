@@ -1,3 +1,8 @@
+# fm.zorx.space
+
+A terminal radio.
+
+
 To listen to the stream, run:
 ```bash
 ssh -T fm@zorx.space | mpg123 -q -
