@@ -3,9 +3,13 @@ import requests
 import threading
 
 STATIONS = [
+    ("DEF CON Radio", "http://ice1.somafm.com/defcon-128-mp3"),
+    ("Drone Zone", "http://ice1.somafm.com/dronezone-128-mp3"),
+    ("Beat Blender", "http://ice1.somafm.com/beatblender-128-mp3"),
+    ("Underground 80s", "http://ice1.somafm.com/underground80s-128-mp3"),
     ("Groove Salad", "http://ice1.somafm.com/groovesalad-128-mp3"),
     ("Lush", "http://ice1.somafm.com/lush-128-mp3"),
-    ("DEF CON Radio", "http://ice1.somafm.com/defcon-128-mp3")
+    ("Bossa", "https://somafm.com/tikitime256.pls"),
 ]
 
 current_index = 0
@@ -26,6 +30,9 @@ def input_listener():
             for i, (name, _) in enumerate(STATIONS):
                 sys.stderr.write(f"{i+1}. {name}\n")
                 sys.stderr.flush()
+        elif cmd.isnumeric():
+            current_index = int(cmd) - 1
+            station_changed.set()
 
 def stream_station(url):
     """Stream station MP3 bytes to stdout"""
@@ -39,7 +46,12 @@ def stream_station(url):
 
 if __name__ == "__main__":
     sys.stderr.write("🎵 Welcome to fm.zorx.space 🎵\n")
-    sys.stderr.write("Commands: :next, :list, :quit\n\n")
+    sys.stderr.write("Commands: :next, :list, :quit, <channel:int>\n\n")
+
+    for i, (name, _) in enumerate(STATIONS):
+        sys.stderr.write(f"{i+1}. {name}\n")
+        sys.stderr.flush()
+
     sys.stderr.flush()
 
     threading.Thread(target=input_listener, daemon=True).start()
