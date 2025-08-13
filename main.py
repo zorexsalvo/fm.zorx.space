@@ -1,6 +1,7 @@
 import sys
 import requests
 import threading
+import shutil
 
 STATIONS = [
     ("DEF CON Radio", "http://ice1.somafm.com/defcon-128-mp3"),
@@ -44,12 +45,26 @@ def stream_station(url):
                 sys.stdout.buffer.write(chunk)
                 sys.stdout.buffer.flush()
 
+def center_message(message):
+    """Center a message in the terminal"""
+    columns = shutil.get_terminal_size().columns
+    padding = (columns - len(message)) // 2
+    return ' ' * padding + message
+
+def color_text(text, color_code='93'):
+    """Color a text with ANSI escape codes"""
+    return f'\033[{color_code}m{text}\033[0m'
+
 if __name__ == "__main__":
-    sys.stderr.write("🎵 Welcome to fm.zorx.space 🎵\n")
-    sys.stderr.write("Commands: :next, :list, :quit, <channel:int>\n\n")
+    app_name = color_text("fm.zorx.space")
+    message = f"🎵 Welcome to {app_name} 🎵\n"
+    sys.stderr.write("\n" + center_message(message))
+    sys.stderr.write(
+        center_message("Commands: :next, :list, :quit, <channel:int>\n\n")
+    )
 
     for i, (name, _) in enumerate(STATIONS):
-        sys.stderr.write(f"{i+1}. {name}\n")
+        sys.stderr.write(center_message(f"{i+1}. {name}\n"))
         sys.stderr.flush()
 
     sys.stderr.flush()
@@ -58,7 +73,7 @@ if __name__ == "__main__":
 
     while running:
         name, url = STATIONS[current_index]
-        sys.stderr.write(f"\nNow playing: {name}\n")
+        sys.stderr.write("\n" + center_message(f"Now playing: {name}") + "\n\n\n")
         sys.stderr.flush()
         station_changed.clear()
         stream_station(url)
