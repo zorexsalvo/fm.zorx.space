@@ -6,7 +6,7 @@ STATIONS = [
     ("DEF CON Radio", "http://ice1.somafm.com/defcon-128-mp3"),
     ("Drone Zone", "http://ice1.somafm.com/dronezone-128-mp3"),
     ("Beat Blender", "http://ice1.somafm.com/beatblender-128-mp3"),
-    ("Underground 80s", "http://ice1.somafm.com/underground80s-128-mp3"),
+    ("Underground 80s", "http://ice1.somafm.com/u80s-128-mp3"),
     ("Groove Salad", "http://ice1.somafm.com/groovesalad-128-mp3"),
     ("Lush", "http://ice1.somafm.com/lush-128-mp3"),
     ("Bossa", "https://somafm.com/tikitime256.pls"),
