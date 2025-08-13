@@ -1,7 +1,6 @@
-import subprocess
 import sys
+import requests
 import threading
-import time
 
 STATIONS = [
     ("Groove Salad", "http://ice1.somafm.com/groovesalad-128-mp3"),
@@ -10,41 +9,45 @@ STATIONS = [
 ]
 
 current_index = 0
-player_proc = None
 running = True
-
-def play_station(url):
-    global player_proc
-    player_proc = subprocess.Popen(["mpg123", "-q", url])
+station_changed = threading.Event()
 
 def input_listener():
-    global current_index, running, player_proc
+    global current_index, running
     while running:
         cmd = sys.stdin.readline().strip()
         if cmd == ":quit":
             running = False
-            if player_proc:
-                player_proc.kill()
+            station_changed.set()
         elif cmd == ":next":
             current_index = (current_index + 1) % len(STATIONS)
-            if player_proc:
-                player_proc.kill()
-            print(f"\nSwitching to {STATIONS[current_index][0]}...\n")
-            play_station(STATIONS[current_index][1])
+            station_changed.set()
         elif cmd == ":list":
             for i, (name, _) in enumerate(STATIONS):
-                print(f"{i+1}. {name}")
+                sys.stderr.write(f"{i+1}. {name}\n")
+                sys.stderr.flush()
 
-print("🎵 Welcome to fm.zorx.space 🎵")
-print("Commands: :next, :list, :quit\n")
-print(f"Now playing: {STATIONS[current_index][0]}\n")
+def stream_station(url):
+    """Stream station MP3 bytes to stdout"""
+    with requests.get(url, stream=True) as r:
+        for chunk in r.iter_content(chunk_size=4096):
+            if not running or station_changed.is_set():
+                break
+            if chunk:
+                sys.stdout.buffer.write(chunk)
+                sys.stdout.buffer.flush()
 
-play_station(STATIONS[current_index][1])
+if __name__ == "__main__":
+    sys.stderr.write("🎵 Welcome to fm.zorx.space 🎵\n")
+    sys.stderr.write("Commands: :next, :list, :quit\n\n")
+    sys.stderr.flush()
 
-threading.Thread(target=input_listener, daemon=True).start()
+    threading.Thread(target=input_listener, daemon=True).start()
 
-while running:
-    time.sleep(0.2)
-
-print("Goodbye!")
+    while running:
+        name, url = STATIONS[current_index]
+        sys.stderr.write(f"\nNow playing: {name}\n")
+        sys.stderr.flush()
+        station_changed.clear()
+        stream_station(url)
 
