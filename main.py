@@ -10,7 +10,7 @@ STATIONS = [
     ("Underground 80s", "http://ice1.somafm.com/u80s-128-mp3"),
     ("Groove Salad", "http://ice1.somafm.com/groovesalad-128-mp3"),
     ("Lush", "http://ice1.somafm.com/lush-128-mp3"),
-    ("Bossa", "https://somafm.com/tikitime256.pls"),
+    ("Bossa", "https://ice1.somafm.com/bossa-128-mp3"),
 ]
 
 current_index = 0
