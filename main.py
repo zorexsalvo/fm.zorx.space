@@ -11,6 +11,7 @@ STATIONS = [
     ("Groove Salad", "http://ice1.somafm.com/groovesalad-128-mp3"),
     ("Lush", "http://ice1.somafm.com/lush-128-mp3"),
     ("Bossa", "https://ice1.somafm.com/bossa-128-mp3"),
+    ("In-Sound", "https://ice1.somafm.com/insound-128-mp3"),
 ]
 
 current_index = 0
